@@ -42,29 +42,30 @@ def main():
     while shipping_time is not 0:
       shipping_time = shipping_time - 1
       for friend in friends_info:
-        print friend
-        if friend["birthday"] is now.strftime("%m/%d"):
+        #print "===>", friend
+        if friend["birthday"] is not now.strftime("%m/%d"): # hk ===> Fix this date thing
             birthday_people.append(friend)
             print "Birthday Eligible Person :", friend["name"]
     return birthday_people 
 
   def create_main_directory(graph):
     profile = graph.get_object("me")
-    print "ME==>",profile["username"]
+    #print "ME==>",profile["username"]
     directory = profile["username"]
     if not os.path.exists(directory):
       os.makedirs(directory)
-      print "=> Created Directory:",directory
+      #print "=> Created Directory:",directory
+    return directory
 
-  def get_data(graph, person_id, person_name, album_max):
+  def get_data(graph, person_id, person_name, album_max, directory):
     #print "Friend ID: ", friend["id"]
     #print "Name: ", friend["name"]
     BaseDir = directory + "/" +person_name
-    print "BaseDir:", BaseDir
+    #print "BaseDir:", BaseDir
     BaseDir = BaseDir.replace(" ", "_");
     if not os.path.exists(BaseDir):
       os.makedirs(BaseDir)
-      print "=> Created Directory:",BaseDir
+      #print "=> Created Directory:",BaseDir
 
     albums = graph.get_object(str(person_id)+"/albums")["data"]
     #print albums
@@ -98,9 +99,9 @@ def main():
     Dir = CurrentDir
     os.system("echo Run Collage Command Here!!") 
 
-  def get_collage(graph,person_id, person_name, album_max):
-    print "Getting Information of %s", person_name
-    get_data(graph, person_id, person_name, album_max)
+  def get_collage(graph,person_id, person_name, album_max, directory):
+    print "Getting Information of ", person_name
+    get_data(graph, person_id, person_name, album_max, directory)
     create_collage(person_name)
 
 #================== Function Code =========================
@@ -109,12 +110,12 @@ def main():
   album_max = 2 # Maximum number of Albums to be downloaded
   graph  = authenticate()
   friends_info = get_all_birthdays(graph, friend_no)
-  print friends_info
+  #print friends_info
   birthday_people = within_range(friends_info, shipping_time)
-  create_main_directory(graph)
+  directory = create_main_directory(graph)
   for person in birthday_people:
     print "Get Collage for %s" % person["name"]
-    get_collage(graph, person["id"], person["name"], album_max)
+    get_collage(graph, person["id"], person["name"], album_max, directory)
 
 
 if __name__ == "__main__":
