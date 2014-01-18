@@ -1,7 +1,6 @@
 #!/bin/python
 import facebook
-oauth_access_token = "CAACEdEose0cBAIWLdY15VT6yZBeBbQCo6o2MnaZCtU0Ql5Bo7fwiPev621KHRzmqxtliDGZAZAI1mTLYpBueI4ixibhT8xofmB4BZBBOtoCiYzKYjv2OA3G74RrMWrohAFfPYKkoXkGiDSJVb8EoTbprGcezSIklZCbHZAzZArxcd9kLtgDtDOXWcAoGVHEo7KYZAO25KRHokGwZDZD"
-
+oauth_access_token = "CAACEdEose0cBAMXyvINsk7F2HSIBjQzLg5sIbepdTA9031BzB5DidJZAxAgNxogsjzPb8lCIEWxZAUgFPOQOZBpuBaq0B42H38NWZCRsihwbMW8W5rp06kEFnmjZCOI7aBroPZC0vGcbhZBylqjB9M8BruBO4pq4syiCcJchaWOz8IRZAZAgI6rdPqJyBYCVmEMBRMBuuOZCXv7gZDZD"
 graph = facebook.GraphAPI(oauth_access_token)
 #friendlistall = graph.get_object("me/friends(name,birthday)")
 #friendlist = friendlistall["data"]
@@ -10,7 +9,7 @@ graph = facebook.GraphAPI(oauth_access_token)
 
 friends = graph.get_connections("me", "friends")
 
-friend_no = 5
+friend_no = 1
 
 
 for friend in friends["data"]:
@@ -20,9 +19,8 @@ for friend in friends["data"]:
     #print "-"*10
       print "Friend ID: ", friend["id"]
       print "Name: ", friend["name"]
-      print "Birthday", graph.get_object(friend["id"])["birthday"]
-  #print request(self, friend["id"], args=birthday)
-    #print graph.get_object(friend["id"],birthday)
+      #print "Birthday", graph.get_object(friend["id"])["birthday"]
+      print "Birthday", graph.get_object(friend["id"],name,friends.fields(picture))
     except:
       print "No birthday"
   #print friend.get_birthday()
