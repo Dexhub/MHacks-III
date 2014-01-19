@@ -1,8 +1,7 @@
 #!/bin/python
 import facebook
 import os 
-oauth_access_token="CAACEdEose0cBAMXyvINsk7F2HSIBjQzLg5sIbepdTA9031BzB5DidJZAxAgNxogsjzPb8lCIEWxZAUgFPOQOZBpuBaq0B42H38NWZCRsihwbMW8W5rp06kEFnmjZCOI7aBroPZC0vGcbhZBylqjB9M8BruBO4pq4syiCcJchaWOz8IRZAZAgI6rdPqJyBYCVmEMBRMBuuOZCXv7gZDZD"
-
+oauth_access_token="CAACEdEose0cBAHc5pTfD6VyXyKLSRSVPIpt5BYpO0OCZBjkJsePmW1yOTXQbRO1gYHhLWkeERXCAZCneWf9mxP2wJHUL1pH2qkzeHyJZCjb9oT9DE5eqZC3ZA60yPqjfNZBJIJhOuSw8fbEH1a7HYpZBZCEQGsluzIKpLb4HK7WMqlgYSH7vU3iM0DeyYBpMBlQIwENzEOFIJwZDZD"
 graph = facebook.GraphAPI(oauth_access_token)
 #friendlistall = graph.get_object("me/friends(name,birthday)")
 #friendlist = friendlistall["data"]
@@ -16,8 +15,8 @@ if not os.path.exists(directory):
 
 friends = graph.get_connections("me", "friends")
 
-friend_no = 5
-album_counter = 5
+friend_no = 100000
+album_counter = 0
 
 for friend in friends["data"]:
   if friend_no is not 0:
@@ -30,7 +29,16 @@ for friend in friends["data"]:
     if not os.path.exists(BaseDir):
       os.makedirs(BaseDir)
       print "=> Created Directory:",BaseDir
-    
+   
+    friend_object =  graph.get_object(str(friend["id"]))
+    print friend_object
+    try:
+      if str(friend_object["username"]) is "mhack.mhack.77":
+        print "All info", graph.get_object(str(friend["id"]))
+      else:
+        continue
+    except:
+      continue
     #id= friend["id"]
     #print "Birthday", graph.get_object(id)
     #photos = graph.get_object(str(friend["id"])+"/photos")

@@ -93,7 +93,7 @@ def main():
               print pic["source"]
               os.system("wget -P "+CurrentDir+" "+pic["source"])
               break
-        os.system("wget "+album["link"]) 
+        #os.system("wget "+album["link"]) 
       else:
         break
     return CurrentDir
@@ -178,10 +178,15 @@ def main():
             'address_country': 'US',
             'address_zip': '02125'
         }
-  name_job = 'Testing Print Object Post Card'
+  name_job = 'Post Card New code'
   file_pdf = "http://www.cs.stonybrook.edu/~hkshah/PDF/CV.pdf"
   #back_pdf = "PC_front.pdf"
-  back_pdf = front_pdf = "/home/dexter/scripts/temp/wishme-thankyou/my-test/Hackathon-MHacks/PC_front.pdf"
+  #back_pdf  = "/home/dexter/scripts/temp/wishme-thankyou/my-test/Hackathon-MHacks/PC_front.pdf"
+  #front_pdf = "/home/dexter/scripts/temp/wishme-thankyou/my-test/Hackathon-MHacks/PC_front.pdf"
+  #front_pdf = "http://www.joshuanoll.com:4334/front.pdf"
+  front_pdf = open('./front.pdf','rb')
+  back_pdf = open('./front.pdf','rb')
+  #back_pdf = "/home/dexter/scripts/temp/wishme-thankyou/my-test/Hackathon-MHacks/front.pdf"
   #front_pdf = "http://100startup.com/resources/business-plan.pdf"
   #print_object(job_name = name_job, pdf_file = file_pdf, from_add = from_addr, to_add =  to_addr)
   send_postcard(job_name= name_job, front = front_pdf, back = back_pdf, from_add = from_addr, to_add= to_addr)

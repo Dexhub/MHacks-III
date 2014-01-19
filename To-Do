@@ -1,0 +1,5 @@
+> montage *.jpg -border 2x2 -background black +polaroid -resize 75% -geometry -60-60 -tile x6 final.jpg
+> Get birthday List Format Code
+> Save images at perfect places
+> Authentication of Facebook
+> Birthday Range
