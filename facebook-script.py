@@ -5,12 +5,182 @@ import os
 import lob
 
 lob.api_key = "test_204515ce2c65d12b8ae9eea9f10f2edcba5"
-oauth_access_token = "CAACEdEose0cBAEBsaDIxzjrufURJ5HkWIkp5x3aKx6CLFxakbJTWg4myYNZBOCmZANkVKOcX4WXAI8MWpQNgbCMpLk85s48Xg2wLtZAvuvgLUStqygQqrNsgGBUnKrzsRO8a7iNg0CWxZCIIfB8gLjWZCZBVu16s4mBul3koBiyJARXnldaxtEoTheazL0fBcHewEcUi8A1QZDZD"
+oauth_access_token = "CAACEdEose0cBAHbltzCMlyQmsExUmyy1tE64kCcXdkB3BHzkpwzLbZAAZCjLPwEOB6xnVBNhYJ7TD50DCR7ccFqMKmH4icUTurZCvYOwDS8BFNVDwmEvqDB1KUad2QjDZANY6xAtRD3YJqlDpKkDZBDGzzZCDn2RcmucHKuPbL15imK1OFcpppmlFQcYIn7mU27ZCXHBIiiywZDZD"
 #friendlistall = graph.get_object("me/friends(name,birthday)")
 #friendlist = friendlistall["data"]
 #friendlist = graph.get_object("me/friends")
 def main():
+  global from_add
+  from_add = {
+            'name': 'Himanshu Shah',
+            'address_line1': '14, Beverly Hills',
+            'address_line2': 'Palm Villas',
+            'address_city': 'Los Angeles',
+            'address_state': 'CA',
+            'address_country': 'US',
+            'address_zip': '02125'
+        }
+  def get_my_option(choices):
+    # The format of Choices i for each 
+    # choice["id"],
+    # choice["name"],
+    # choice["selection"] = 101 -> Color Document - 8.500 X 11 
+    #                     = 305 -> Posters - 11 X 17 
+    #                     = 306 -> Posters - 18 X 24 
+    #                     = 307 -> Posters - 24 x 36 
+    #                     = 502 -> Poster - 8 x 10 
+    #                     = 700 -> Mug - 8.58 X 3.7
+    #                     = 1 -> Post Card - 8.58 X 3.7
+    # choice["delivery"] = 0 -> Email
+    #                      1 -> Delivery
+    # choice["address"] = if its Delivery
+    # choice["email"] =  is its Email
 
+    for choice in choices:
+      sel = choice["selection"]
+      if sel is 305:
+        invoke_Poster(choice, width = 11, height = 17)
+      elif sel is 306:
+        invoke_Poster(choice, width = 18, height = 24)
+      elif sel is 307:
+        invoke_Poster(choice, width = 24, height = 36)
+      elif sel is 502:
+        invoke_Poster(choice, width = 8, height = 10)
+      elif sel is 700:
+        invoke_Mug(choice)
+      elif sel is 1:
+        invoke_Postcard(choice)
+      else:
+        print "Invalid choice"
+    return
+
+  def invoke_Poster(choice ,width = 18, height = 24 ):
+    person_id = choice["id"]
+    person_name = choice["name"]
+    graph = authenticate()
+    CurrentDir = get_data(graph, person_id, person_name, album_max = 5, directory="vin.jay.90")
+    create_collage(CurrentDir)
+    image_name = CurrentDir+"/collage.jpg"
+    convert_pdf(image_name, width, height)
+    #TODO if choice["delivery"] is 0:
+    #  email = choice["email"]
+    #else if choice["delivery"]
+    address = choice["address"]
+    global from_add
+    print_object("Poster_print", CurrentDir+"/output.pdf", from_add, to_add, choice_id = 0, quantity = 1)
+    return
+
+
+  def invoke_Postcard(choice):
+    person_id = choice["id"]
+    person_name = choice["name"]
+    address = choice["address"]
+    graph = authenticate()
+    CurrentDir = get_data(graph, person_id, person_name, album_max = 1, max_photos = 1, directory="vin.jay.90")
+    image_name = CurrentDir+"/*.jpg"
+    #TODO create_frontpdf(address) 
+    create_backpdf(image_name) 
+    #pc_front.pdf
+    #pc_back.pdf
+    front = CurrentDir+"/PC_front.pdf"
+    back = CurrentDir+"/PC_back.pdf"
+    to_add = address
+    send_postcard("Post_card_print", front, back, from_add, to_add)
+
+    
+
+  def invoke_Mug(choice):
+    person_id = choice["id"]
+    person_name = choice["name"]
+    to_add = choice["address"]
+    graph = autheticate()
+    CurrentDir = get_data(graph, person_id, person_name, album_max = 1, directory="vin.jay.90")
+    image_name = CurrentDir+"/*.jpg"
+    create_mug_pdf(image_name)
+    mug_file = CurrentDir+"/mug.pdf"
+    global from_add
+    print_object("Mug_File", mug_file, from_add, to_add, choice_id = 15, quantity = 1)
+  
+  def create_frontpdf(to_name, to_street_address, to_city, to_state, to_zip_code, from_name, from_street_address, from_city, from_state, from_zip_code):
+  
+      from reportlab.pdfgen import canvas
+      from reportlab.lib.units import inch
+      from reportlab.lib.colors import black, white
+  
+      #CREATE THE FRONT SIDE
+      canvas = canvas.Canvas("PC_front.pdf")
+      canvas.setLineWidth(.3)
+      canvas.setFont('Helvetica', 10)
+      canvas.setPageSize((6*inch, 4*inch))
+  
+      #Border and Stamp
+      canvas.setFillColor(white)
+      canvas.rect(0.1*inch, 0.1*inch, 5.8*inch, 3.8*inch, stroke=1, fill=1)
+      #canvas.rect(4.8*inch, 2.8*inch, 0.85*inch, 0.85*inch, stroke=1, fill=1)
+  
+      #Center Line
+      canvas.line(3*inch, 0.5*inch, 3*inch, 3.5*inch)
+  
+      #To Address Lines (5 nos)
+      
+      canvas.setFillColor(black)
+      canvas.drawString(3.4*inch, 3.4*inch,'To,')
+      canvas.drawString(3.5*inch, 3.2*inch,to_name)
+      canvas.drawString(3.5*inch, 3.0*inch,to_street_address)
+      canvas.drawString(3.5*inch, 2.8*inch,to_city)
+      canvas.drawString(3.5*inch, 2.6*inch,to_state)
+      canvas.drawString(3.5*inch, 2.4*inch,to_zip_code)
+  
+      #From Address Lines (5 nos)
+      
+      canvas.setFillColor(black)
+      canvas.drawString(3.4*inch, 2.0*inch,'From,')
+      canvas.drawString(3.5*inch, 1.8*inch,from_name)
+      canvas.drawString(3.5*inch, 1.6*inch,from_street_address)
+      canvas.drawString(3.5*inch, 1.4*inch,from_city)
+      canvas.drawString(3.5*inch, 1.2*inch,from_state)
+      canvas.drawString(3.5*inch, 1.0*inch,from_zip_code)
+  
+      canvas.setFont('Helvetica', 18)
+      canvas.drawString(0.5*inch, 2.5*inch,'Many Many Happy ')
+      canvas.drawString(0.5*inch, 2.0*inch,'Returns of the Day')
+      
+  
+      canvas.save()
+      
+  def create_backpdf(image_name):
+  
+      from reportlab.pdfgen import canvas
+      from reportlab.lib.units import inch
+      
+      canvas = canvas.Canvas('PC_back.pdf')
+      canvas.setPageSize((6*inch, 4*inch))
+      canvas.drawImage(image_name, 0.1*inch, 0.1*inch, 5.9*inch, 3.9*inch)
+      canvas.showPage()
+      canvas.save()
+  
+  def create_mug_pdf(image_name):
+  
+      from reportlab.pdfgen import canvas
+      from reportlab.lib.units import inch
+      
+      canvas = canvas.Canvas('mug.pdf')
+      canvas.setPageSize((8.58*inch, 3.7*inch))
+      canvas.drawImage(image_name, 0.1*inch, 0.1*inch, 5.9*inch, 3.9*inch)
+      canvas.showPage()
+      canvas.save()
+  
+  def convert_pdf(image_name, width, height):
+  
+      from reportlab.pdfgen import canvas
+      from reportlab.lib.units import inch
+      
+      canvas = canvas.Canvas('output.pdf')
+      canvas.setPageSize((width*inch, heigth*inch))
+      canvas.drawImage(image_name, 0.1*inch, 0.1*inch, (width-0.1)*inch, (height-0.1)*inch)
+      canvas.showPage()
+      canvas.save()
+  
   def authenticate():
     try:
       graph = facebook.GraphAPI(oauth_access_token)
@@ -49,7 +219,7 @@ def main():
         if friend["birthday"] is not now.strftime("%m/%d"): # hk ===> Fix this date thing
             birthday_people.append(friend)
             print "Birthday Eligible Person :", friend["name"]
-    return birthday_people 
+    return birthday_people
 
   def create_main_directory(graph):
     profile = graph.get_object("me")
@@ -60,7 +230,7 @@ def main():
       #print "=> Created Directory:",directory
     return directory
 
-  def get_data(graph, person_id, person_name, album_max, directory):
+  def get_data(graph, person_id, person_name, album_max = 5, max_photos = 100, directory="vin.jay.90"):
     #print "Friend ID: ", friend["id"]
     #print "Name: ", friend["name"]
     BaseDir = directory + "/" +person_name
@@ -69,7 +239,6 @@ def main():
     if not os.path.exists(BaseDir):
       os.makedirs(BaseDir)
       #print "=> Created Directory:",BaseDir
-
     albums = graph.get_object(str(person_id)+"/albums")["data"]
     #print albums
     for album in albums:
@@ -87,20 +256,26 @@ def main():
         profile_pics = graph.get_object(album["id"])
         pictures = (graph.get_object(album["id"]+"/"+"photos")["data"])
         for picture in pictures:
-          for pic in picture["images"]:
-            if pic["width"] > 500 or pic["height"] > 500:
-              print pic["width"], pic["height"]
-              print pic["source"]
-              os.system("wget -P "+CurrentDir+" "+pic["source"])
-              break
+          if max_photos is not 0:
+            max_photos = max_photos - 1
+            for pic in picture["images"]:
+              if pic["width"] > 500 or pic["height"] > 500:
+                print pic["width"], pic["height"]
+                print pic["source"]
+                os.system("wget -P "+CurrentDir+" "+pic["source"])
+                break
+          else:
+            break
         #os.system("wget "+album["link"]) 
       else:
         break
     return CurrentDir
 
-  def create_collage(person_name):
-    #Dir = CurrentDir
-    os.system("echo Run Collage Command Here!!") 
+  def create_collage(currentdir):
+    path = currentdir+"/*.jpg"
+    print "Path: ", path
+    Command = "montage -resize 100x150 "+path+ " -geometry +3+3 -tile 4x4 -shadow collage.jpg"
+    os.system(Command) 
 
   def get_collage(graph,person_id, person_name, album_max, directory):
     print "Getting Information of ", person_name
@@ -116,22 +291,11 @@ def main():
 #    print lob.setting.list() 
   
   def print_object(job_name, pdf_file, from_add, to_add, choice_id = 0, quantity = 1):
-    #print sender_name
-    #print from_add
-
     object_created = lob.Object.create(name = job_name, file = pdf_file,
     setting_id=lob.Setting.list()[0].id, quantity=1).to_dict()
     last = len(lob.Object.list())
     print "Job Created", lob.Job.create(name = job_name, to = to_add,
                          objects=lob.Object.list()[last-1].id, from_address = from_add).to_dict()
-#    print "Object Created : ", object_created
-   
-#    print "Job Created: ", (lob.Job.create(sender_name, from_add,
-#                         object_created, from_address=from_add)).to_dict()
-
-   # print "Job Created", lob.Job.create(name = sender_name, to=lob.Address.list(count=1)[0].id,
-   #                      objects=lob.Object.list()[last-1].id, from_address=lob.Address.list(count=1,
-   #                                                                                     offset=5)[0].id).to_dict()
 
   def send_postcard(job_name, front, back, from_add, to_add):
     print "Post Card", lob.Postcard.create(name = job_name, to = to_add, front = front,
@@ -141,12 +305,27 @@ def main():
     
 
 #================== Function Code =========================
-#  friend_no = 10 # Number of friends
-#  shipping_time = 5 # Days
-#  album_max = 2 # Maximum number of Albums to be downloaded
-#  graph  = authenticate()
-#  friends_info = get_all_birthdays(graph, friend_no)
-#  #print friends_info
+  friend_no = 10 # Number of friends
+  shipping_time = 5 # Days
+  album_max = 2 # Maximum number of Albums to be downloaded
+  graph  = authenticate()
+  friends_info = get_all_birthdays(graph, friend_no)
+  print friends_info
+  tempaddr1 = {
+            'name': 'Siddharth Saha',
+            'address_line1': '220 William T Morrissey',
+            'address_line2': 'Sunset Town',
+            'address_city': 'Boston',
+            'address_state': 'MA',
+            'address_country': 'US',
+            'address_zip': '02125'
+        }
+  choices = [{'id': '517614939', 'name': 'Shannon Hunter','address':tempaddr1}, 
+             
+             
+             
+             
+             {'birthday': '07/14/1994', 'id': '1306797872', 'name': 'Kaylee Marie Allen'}, {'birthday': '09/15', 'id': '100000073500871', 'name': 'Jada Leigh'}, {'birthday': '09/07/1994', 'id': '100000351939887', 'name': 'April Roulette'}, {'birthday': '12/22', 'id': '100001348159093', 'name': 'Heidi Butler'}, {'birthday': '09/06/1995', 'id': '100001361974023', 'name': 'Xena Roulette'}, {'birthday': '12/22', 'id': '100001402788224', 'name': 'Sammy Leckie'}, {'birthday': '07/03', 'id': '100002690531733', 'name': 'Mercedes Heaven Beaar'}, {'birthday': '07/15/1994', 'id': '100002957226119', 'name': 'Savanah Littlejohn'}]
 #  birthday_people = within_range(friends_info, shipping_time)
 #  directory = create_main_directory(graph)
 #  for person in birthday_people:
@@ -160,15 +339,6 @@ def main():
     ################ after creating a post card 
 
   ## Code for lob
-  from_addr = {
-            'name': 'Siddharth Saha',
-            'address_line1': '220 William T Morrissey',
-            'address_line2': 'Sunset Town',
-            'address_city': 'Boston',
-            'address_state': 'MA',
-            'address_country': 'US',
-            'address_zip': '02125'
-        }
   to_addr = {
             'name': 'Siddharth Saha',
             'address_line1': '220 William T Morrissey',
@@ -178,18 +348,15 @@ def main():
             'address_country': 'US',
             'address_zip': '02125'
         }
-  name_job = 'Post Card New code'
-  file_pdf = "http://www.cs.stonybrook.edu/~hkshah/PDF/CV.pdf"
-  #back_pdf = "PC_front.pdf"
-  #back_pdf  = "/home/dexter/scripts/temp/wishme-thankyou/my-test/Hackathon-MHacks/PC_front.pdf"
-  #front_pdf = "/home/dexter/scripts/temp/wishme-thankyou/my-test/Hackathon-MHacks/PC_front.pdf"
-  #front_pdf = "http://www.joshuanoll.com:4334/front.pdf"
-  front_pdf = open('./front.pdf','rb')
-  back_pdf = open('./front.pdf','rb')
-  #back_pdf = "/home/dexter/scripts/temp/wishme-thankyou/my-test/Hackathon-MHacks/front.pdf"
-  #front_pdf = "http://100startup.com/resources/business-plan.pdf"
-  #print_object(job_name = name_job, pdf_file = file_pdf, from_add = from_addr, to_add =  to_addr)
-  send_postcard(job_name= name_job, front = front_pdf, back = back_pdf, from_add = from_addr, to_add= to_addr)
+
+
+
+
+#  name_job = 'Post Card New code'
+#  file_pdf = "http://www.cs.stonybrook.edu/~hkshah/PDF/CV.pdf"
+#  front_pdf = open('./front.pdf','rb')
+#  back_pdf = open('./front.pdf','rb')
+#  send_postcard(job_name= name_job, front = front_pdf, back = back_pdf, from_add = from_addr, to_add= to_addr)
 
 
 
