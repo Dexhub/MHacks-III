@@ -334,8 +334,7 @@ def main():
   def print_object(job_name, pdf_file, from_add, to_add, choice_id = 0, quantity = 1):
     object_created = lob.Object.create(name = job_name, file = pdf_file,
     setting_id=lob.Setting.list()[choice_id].id, quantity=1).to_dict()
-    print setting_id
-    print Setting.list()[choice_id].id
+    print lob.Setting.list()[choice_id].id
     last = len(lob.Object.list())
     print "Job Created", lob.Job.create(name = job_name, to = to_add,
                          objects=lob.Object.list()[last-1].id, from_address = from_add).to_dict()
@@ -365,7 +364,7 @@ def main():
             'address_zip': '02125'
         }
   choices = [{'id': '1306797872', 'name': 'Kaylee Marie Allen' ,'address':tempaddr1, 'delivery': 1, 'selection': 305 }]             
-  get_my_option(choices)
+  #get_my_option(choices)
 #  birthday_people = within_range(friends_info, shipping_time)
 #  directory = create_main_directory(graph)
 #  for person in birthday_people:
@@ -392,12 +391,11 @@ def main():
 
 
 
-#  name_job = 'Post Card New code'
-#  file_pdf = "http://www.cs.stonybrook.edu/~hkshah/PDF/CV.pdf"
-#  front_pdf = open('./front.pdf','rb')
-#  back_pdf = open('./front.pdf','rb')
-#  send_postcard(job_name= name_job, front = front_pdf, back = back_pdf, from_add = from_addr, to_add= to_addr)
-
+  name_job = 'Post Card New code'
+  file_pdf = "http://www.cs.stonybrook.edu/~hkshah/PDF/CV.pdf"
+  output = open('./temp.pdf','rb')
+  #send_postcard(job_name= name_job, front = front_pdf, back = back_pdf, from_add = from_addr, to_add= to_addr)
+  print_object("Poster_print", output, to_addr, to_addr)
 
 
 
