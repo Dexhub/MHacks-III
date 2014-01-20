@@ -1,0 +1,17 @@
+<html>
+<body>
+<h2> you are going to send gift to {{name}}</h2>
+<form action="/order/" method="get" id="formid">
+
+My name is <label for="name">{{name}}</label>
+</br>
+Recipient Email:<input type="text" name="email">
+<input type="submit" value="order">
+
+</form>
+
+<textarea rows="4" cols="50" name="comment" form="formid">
+Personalised Message Here:
+</textarea>
+</body>
+</html>

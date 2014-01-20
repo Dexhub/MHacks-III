@@ -1,0 +1,18 @@
+<html>
+<head>
+    <title>print some data</title>
+</head>
+<body>
+
+<ul>
+
+{% for x in info %}
+<form action="/login3/" method="get">  	
+	<li> <input type="submit" name="m" value="{{x.name}} on {{x.birthday}}" id="m"></li>
+   </form>
+{% endfor %}
+</ul>
+
+</body>
+</html>
+

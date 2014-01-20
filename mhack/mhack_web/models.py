@@ -1,17 +1,20 @@
 from django.db import models
 
 # Create your models here.
-class User(models.Model):
-	name = models.CharField(max_length=30)
-    birthday = models.DateField()
-
-	def __unicode__(self,obj):
-		for userdict in obj:
-			name=userdict['name']
-			birthday=userdict['birthday']
-			print (name)
-			print(birthday)
-		
-			
-
-
+UserList=[]
+class User:
+    name = models.CharField(max_length=30)
+    birthday = models.CharField(max_length=30)
+    def __init__(self,name,bday):
+        self.name=name
+        self.birthday=bday
+        print (self.name)
+        print(self.birthday)
+class temp:
+    def __init__(self,obj):
+        #userList=[]
+        for x in obj:
+            self.name=x['name']
+            self.birthday=x['birthday']
+            u=User(self.name,self.birthday)
+            UserList.append(u)

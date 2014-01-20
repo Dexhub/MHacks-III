@@ -1,0 +1,25 @@
+<html>
+<body>
+<h2> You are going to send gift to {{name}}</h2>
+<form action="/order/" method="get" id="formid">
+
+Street:<input type="text" name="street">
+</br>
+City:<input type="text" name="city">
+</br>
+State:<input type="text" name="state">
+</br>
+Zipcode:<input type="text" name="zipcode">
+</br>
+<textarea rows="4" cols="50" name="comment" form="formid">
+Personalised Message Here:
+</textarea>
+</br>
+
+<input type="submit" value="order">
+
+</form>
+
+
+</body>
+</html>

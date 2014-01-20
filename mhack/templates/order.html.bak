@@ -1,0 +1,16 @@
+<html>
+<body>
+<h3>
+Thanks for placing your order with GiftLob !!
+Your order will be dispatched soon..
+Django sucks...bhenchod 
+</h3>
+</br>
+</br>
+<form action="/login2/" method="get">
+<input type="button" value="Order Again?"/>
+</form>
+
+
+</body>
+</html>

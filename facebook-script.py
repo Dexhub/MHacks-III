@@ -5,7 +5,7 @@ import os
 import lob
 
 lob.api_key = "test_204515ce2c65d12b8ae9eea9f10f2edcba5"
-oauth_access_token = "CAACEdEose0cBADNgZBZA8CDxgiCSoqmFLPFm1oT2Ch6kk251mbGVkrMo2ZCannPywNbybEZBsyqk3z0BifXSZBd7KPntZBUmD98TxHjMTIcS95ZCuTgEQkdWUgFm92FqCZBofYF1mBqHIxapSWVJlsgeTUynCpuYNosDjIAr4WUEffIQbi7gk4aDbuu466NVA5e2PePIhM4r8AZDZD"
+oauth_access_token = "CAACEdEose0cBAHKllYZAaIMOeJIWjqdOCrLecrdut11FZCkpjxnDrAAlyDhZBEU631r8J5sjlqqwbNeaBrtnfh0QZCaA4foOv3PcLd6dZCY7qbg8nM277TGYqgVcvW4aWqC1Ux8iZB3WuTjDoiZCQxYZC7ZBJJdvXIxZCwzdeIhiuPrWKQZCzJ4lPDbfpT8aLgUziiFfUvi6pABhwZDZD"
 #friendlistall = graph.get_object("me/friends(name,birthday)")
 #friendlist = friendlistall["data"]
 #friendlist = graph.get_object("me/friends")
@@ -76,7 +76,7 @@ def main():
     to_add = choice["address"]
 
     output = open("temp.pdf", 'rb')
-    print_object("Poster_print", output, from_add, to_add, choice_id = 2)
+    #print_object("Poster_print", output, from_add, to_add, choice_id = 2)
     return
 
 
@@ -228,8 +228,8 @@ def main():
       if friend_no is not 0:
         friend_no = friend_no -1
         try:
-          #print "Friend ID: ", friend["id"]
-          #print "Name: ", friend["name"]
+          print "Friend ID: ", friend["id"]
+          print "Name: ", friend["name"]
           birthday =  graph.get_object(friend["id"])["birthday"]
           data = {'id': friend["id"], 'name': friend["name"], 'birthday': birthday }
           #print "=====>", data
@@ -315,7 +315,7 @@ def main():
   def create_collage(currentdir):
     path = currentdir+"/*.jpg"
     print "Path: ", path
-    Command = "montage -resize 100x150 "+path+ " -geometry +3+3 -tile 4x4 -shadow collage.jpg"
+    Command = "montage -resize 100x150 "+path+ " -geometry +3+3 -tile 5x4 -shadow collage.jpg"
     os.system(Command) 
 
   def get_collage(graph,person_id, person_name, album_max, directory):
@@ -348,12 +348,15 @@ def main():
     
 
 #================== Function Code =========================
-  friend_no = 10 # Number of friends
+  friend_no = 88 # Number of friends
   shipping_time = 5 # Days
   album_max = 2 # Maximum number of Albums to be downloaded
   graph  = authenticate()
-  friends_info = get_all_birthdays(graph, friend_no)
-  #print friends_info
+  frien_info = get_all_birthdays(graph, friend_no)
+  #print frien_info
+  #for f in friends_info:
+  #  print "Name", f["name"]
+  #  print "ID", f["id"] 
   tempaddr1 = {
             'name': 'Siddharth Saha',
             'address_line1': '220 William T Morrissey',
@@ -363,8 +366,12 @@ def main():
             'address_country': 'US',
             'address_zip': '02125'
         }
-  choices = [{'id': '1306797872', 'name': 'Kaylee Marie Allen' ,'address':tempaddr1, 'delivery': 1, 'selection': 305 }]             
-  #get_my_option(choices)
+#Aubrey Dawn
+
+
+  choices = [{'id': '100006933817154', 'name': 'Aubrey Dawn' ,'address':tempaddr1, 'delivery': 1, 'selection': 1 }]             
+#  choices = [{'id': '100000073500871', 'name': 'Kaylee Marie Allen' ,'address':tempaddr1, 'delivery': 1, 'selection': 305 }]             
+  get_my_option(choices)
 #  birthday_people = within_range(friends_info, shipping_time)
 #  directory = create_main_directory(graph)
 #  for person in birthday_people:
@@ -393,9 +400,9 @@ def main():
 
   name_job = 'Post Card New code'
   file_pdf = "http://www.cs.stonybrook.edu/~hkshah/PDF/CV.pdf"
-  output = open('./temp.pdf','rb')
+  #output = open('temp.pdf','rb')
   #send_postcard(job_name= name_job, front = front_pdf, back = back_pdf, from_add = from_addr, to_add= to_addr)
-  print_object("Poster_print", output, to_addr, to_addr)
+  #print_object("Poster_print", output, to_addr, to_addr)
 
 
 
